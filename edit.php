@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $check_query = mysqli_query($connection, $update);
 
         if ($check_query) {
-           echo '<>,.';
+        echo '<script>window.location.href="font.php"</script>';
             
         } else {
             echo "Error updating data: " . mysqli_error($connection);
