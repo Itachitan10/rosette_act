@@ -1,59 +1,62 @@
 <?php
-include("config.php");
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-    $select = ("SELECT * FROM students WHERE id = $id");
-    $result = mysqli_query($connection, $select);
+session_start();
+include('config.php');
 
-
-        $student = mysqli_fetch_assoc($result);
-}
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = mysqli_real_escape_string($connection, $_POST['name']);
-    $section = mysqli_real_escape_string($connection, $_POST['section']);
-    $studentnumber = mysqli_real_escape_string($connection, $_POST['studentnumber']);
-
-    if (!empty($name) && !empty($section) && !empty($studentnumber)) {
-        $update = "UPDATE students SET 
-                   name='$name',
-                   section='$section',
-                   studentnumber='$studentnumber'
-                   WHERE id = $id";
-
-        $check_query = mysqli_query($connection, $update);
-
-        if ($check_query) {
-        echo '<script>window.location.href="font.php"</script>';
-            
-        } else {
-            echo "Error updating data: " . mysqli_error($connection);
-        }
-    } else {
-        echo "Please fill in all fields.";
-    }
-}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Edit Student</title>
+  <meta charset="UTF-8"/>
+  <title>Student List</title>
+  <link rel="stylesheet" href="./font.css"/>
 </head>
-<link rel="stylesheet" href="./font.css">
 <body>
-    <div class="box1">
-  <form method="POST">
-    <div class='box'>
-    <input type="text" name="name" value="<?php echo htmlspecialchars($student['name']); ?>" required /><br/>
-    <input type="text" name="section" value="<?php echo htmlspecialchars($student['section']); ?>" required /><br/>
-    <input type="text" name="studentnumber" value="<?php echo htmlspecialchars($student['studentnumber']); ?>" required /><br/>
-    <button type="submit">Update</button>
-    </div>
-  </form>
-</div>
+
+  <div class="box1">
+    <form action="insertdata.php" method="POST">
+      <div class="box">
+        <input type="text" name="name" placeholder="Name" required /><br/>
+        <input type="text" name="section" placeholder="Section" required /><br/>
+        <input type="text" name="studentnumber" placeholder="Student Number" required /><br/>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+<h1>Student List</h1>
+<div class="container">
+  <table cellpadding="10" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Section</th>
+        <th>Student Number</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+  <?php
+  
+  $select = "SELECT * FROM students";
+$check = mysqli_query($connection, $select);
+$students = mysqli_fetch_all($check, MYSQLI_ASSOC);
+  foreach ($students as $display) { ?>
+    <tr>
+      <td><?php echo $display['name']; ?></td>
+      <td><?php echo $display['section']; ?></td>
+      <td><?php echo $display['studentnumber']; ?></td>
+      <td>
+        <a href="font.php?id=<?php echo $display['id']; ?>"><button type="button">Edit</button></a>
+     <a href="delete.php?id=<?php echo $display['id']; ?>" onclick="return confirm('Are you sure you want to delete this student?');">
+      <button type="button">Delete</button>
+        </a>
+      </td>
+    </tr>
+
+
+  <?php } ?>
+
+</table>
+
 </body>
 </html>
-
-
- 

@@ -12,17 +12,15 @@ if (isset($_GET['id'])) {
         mysqli_stmt_bind_param($stmt, "i", $id);
         if (mysqli_stmt_execute($stmt)) {
            echo '<script>window.location.href="font.php"</script>';
-
-            exit();
         } else {
             echo "Error deleting student.";
         }
-        mysqli_stmt_close($stmt);
+
     } else {
-        echo "Failed to prepare statement.";
+
     }
 } else {
-    echo "No student id specified.";
+
 }
 
 mysqli_close($connection);
